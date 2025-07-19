@@ -52,10 +52,14 @@ int main(int argc, char **argv) {
 
     // Uncomment this block to pass the first stage
     //
-    // accept(server_fd, (struct sockaddr *) &client_addr, (socklen_t *) &client_addr_len);
-    // std::cout << "Client connected\n";
-    //
-    // close(server_fd);
+     int client_fd = accept(server_fd, (struct sockaddr *) &client_addr, (socklen_t *) &client_addr_len);
+    char buffer[4096];
+    int reading = recv(client_fd, buffer, 4096, 0);
+    send(client_fd, "+PONG\r\n", 7, 0);
+
+     std::cout << "Client connected\n";
+    close(client_fd);
+     close(server_fd);
 
     return 0;
 }

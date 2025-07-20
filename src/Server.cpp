@@ -52,14 +52,22 @@ int main(int argc, char **argv) {
 
     // Uncomment this block to pass the first stage
     //
-     int client_fd = accept(server_fd, (struct sockaddr *) &client_addr, (socklen_t *) &client_addr_len);
+    int client_fd = accept(server_fd, (struct sockaddr *) &client_addr, (socklen_t *) &client_addr_len);
     char buffer[4096];
-    int reading = recv(client_fd, buffer, 4096, 0);
-    send(client_fd, "+PONG\r\n", 7, 0);
+    while (true) {
+        int reading = read(client_fd, buffer, sizeof(buffer));
+        std::cout<<buffer<<'\n';
 
-     std::cout << "Client connected\n";
+        std::string msg ("+PONG\r\n");
+        write(client_fd, msg.c_str(), msg.size());
+
+
+        std::cout << "Client connected\n";
+        //shutdown(client_fd, SHUT_RDWR);
+
+    }
     close(client_fd);
-     close(server_fd);
+    close(server_fd);
 
     return 0;
 }
